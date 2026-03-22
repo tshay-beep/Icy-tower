@@ -749,16 +749,19 @@ function gameOver(){
     document.getElementById('finalScore').textContent=Math.floor(dScore).toLocaleString();
     document.getElementById('finalFloor').textContent=`Floor ${hFloor}`;
     document.getElementById('finalCombo').textContent=`Best Combo: x${maxCombo}`;
-    // Auto-save score immediately
+    // Auto-save score
     const nameArea=document.getElementById('nameArea');
+    const restartBtn=document.getElementById('restartBtn');
     const savedName=localStorage.getItem('icy_name')||'';
     if(savedName){
-        // Has a name saved - auto-save the score
         saveScore(savedName,score,hFloor);
         nameArea.style.display='none';
+        restartBtn.style.display='';
     } else {
-        // First time - show name input
+        // First time - must enter name before playing again
         nameArea.style.display='block';
+        nameArea.querySelector('label').textContent='הכנס שם כדי לשמור תוצאה';
+        restartBtn.style.display='none';
         const ni=document.getElementById('playerName');ni.value='';
         setTimeout(()=>ni.focus(),100);
     }
@@ -774,6 +777,7 @@ document.getElementById('saveScoreBtn').addEventListener('click',()=>{
     localStorage.setItem('icy_name',name);
     saveScore(name,score,hFloor);
     document.getElementById('nameArea').style.display='none';
+    document.getElementById('restartBtn').style.display='';
     document.getElementById('nameArea').querySelector('label').textContent='!נשמר';
     setTimeout(()=>{renderLB('go-lb-body',score);renderLB('menu-lb-body');},fbReady?600:50);
 });
