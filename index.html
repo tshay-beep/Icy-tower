@@ -172,7 +172,7 @@ let risingSpeed,risingMinY,currentThemeIdx;
 let hScore=parseInt(localStorage.getItem('icy_hs')||'0');
 const keys={};
 window.addEventListener('keydown',e=>{keys[e.code]=true;if(['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code))e.preventDefault();
-if(e.shiftKey&&e.code==='Tab'&&running){e.preventDefault();cheatSkipToEnd();}});
+if(e.code==='BracketLeft'&&running){e.preventDefault();cheatSkipToEnd();}});
 window.addEventListener('keyup',e=>keys[e.code]=false);
 
 // ============ LEADERBOARD (LOCAL + ONLINE) ============
