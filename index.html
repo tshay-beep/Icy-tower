@@ -171,7 +171,8 @@ let lastLand=-1,shake={x:0,y:0,i:0},frame=0;
 let risingSpeed,risingMinY,currentThemeIdx;
 let hScore=parseInt(localStorage.getItem('icy_hs')||'0');
 const keys={};
-window.addEventListener('keydown',e=>{keys[e.code]=true;if(['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code))e.preventDefault();});
+window.addEventListener('keydown',e=>{keys[e.code]=true;if(['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code))e.preventDefault();
+if(e.shiftKey&&e.code==='Tab'&&running){e.preventDefault();cheatSkipToEnd();}});
 window.addEventListener('keyup',e=>keys[e.code]=false);
 
 // ============ LEADERBOARD (LOCAL + ONLINE) ============
@@ -314,6 +315,26 @@ function init(){
     for(let i=1;i<=300;i++)addPlat(i);
     flipDisp.classList.remove('show');themeAnn.classList.remove('show');
     levelDisp.textContent=THEMES[0].he;
+}
+
+function cheatSkipToEnd(){
+    const targetFloor=(THEMES.length-1)*THEME_FLOORS;
+    plats=[];
+    for(let i=targetFloor-5;i<=targetFloor+100;i++){
+        const gap=50+Math.min(i*.12,20),y=(CH-18)-i*gap;
+        if(i>0&&i%THEME_FLOORS===0){plats.push({x:PLAY_L,y,w:PLAY_W,fl:i,safe:true});}
+        else{const w=Math.max(72,155-i*.3),x=PLAY_L+Math.random()*(PLAY_W-w);plats.push({x,y,w,fl:i});}
+    }
+    const landPlat=plats[0];
+    pl.x=landPlat.x+landPlat.w/2-PW/2;
+    pl.y=landPlat.y-PH;
+    pl.vy=0;pl.vx=0;pl.on=true;
+    hFloor=targetFloor;lastLand=targetFloor;
+    cam.y=pl.y-CH/2;cam.ty=cam.y;
+    currentThemeIdx=getThemeIdx(targetFloor);
+    levelDisp.textContent=THEMES[currentThemeIdx].he;
+    showThemeAnnounce(THEMES[currentThemeIdx]);
+    floorVal.textContent=`Floor ${hFloor}`;
 }
 
 function addPlat(fl){
